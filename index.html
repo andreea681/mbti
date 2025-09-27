@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>MBTI for you</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    .hidden { display: none; }
+    .mbti-box { display: inline-block; width: 22%; vertical-align: top; margin: 10px; border: 1px solid #ccc; padding: 10px; }
+    .mbti-title { font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div id="input-section">
+    <h2>Write your name and your MBTI</h2>
+    <input id="name" placeholder="Your name" />
+    <input id="mbti" placeholder="MBTI (ex: INFP)" />
+    <button onclick="submitForm()">Trimite</button>
+    <p id="response-msg"></p>
+  </div>
+
+  <hr>
+
+  <div id="display-section" class="hidden">
+    <h2>MBTI</h2>
+    <div id="mbti-container"></div>
+  </div>
+
+<script>
+  const mbtiTypes = [
+    "INTJ","INTP","ENTJ","ENTP",
+    "INFJ","INFP","ENFJ","ENFP",
+    "ISTJ","ISFJ","ESTJ","ESFJ",
+    "ISTP","ISFP","ESTP","ESFP"
+  ];
+
+  const messages = {
+    "INTJ": "Strategic, independent, and ambitious. Loves planning and improving systems.",
+    "INTP": "Logical, curious, and introspective. Loves exploring complex ideas.",
+    "ENTJ": "Decisive, strategic, and confident. Leads with vision and efficiency.",
+    "ENTP": "Clever, outspoken, and inventive. Loves challenges and new ideas.",
+    "INFJ": "Insightful, idealistic, and organized. Driven by meaning and helping others.",
+    "INFP": "Idealistic, empathetic, and authentic. Driven by values and personal growth.",
+    "ENFJ": "Warm, inspiring, and empathetic. Motivates others and builds connection.",
+    "ENFP": "Enthusiastic, creative, and curious. Sees possibilities and inspires others.",
+    "ISTJ": "Reliable, practical, and organized. Logical and focused on duty and tradition.",
+    "ISFJ": "Caring, loyal, and detail-oriented. Quietly supports others and values harmony.",
+    "ESTJ": "Efficient, practical, and organized. Natural leader focused on results.",
+    "ESFJ": "Supportive, responsible, and social. Values harmony and helping others.",
+    "ISTP": "Analytical and calm under pressure. Solves practical problems efficiently.",
+    "ISFP": "Gentle, artistic, and private. Values freedom, beauty, and inner peace.",
+    "ESTP": "Energetic, action-oriented, and bold. Lives in the moment and solves fast.",
+    "ESFP": "Fun-loving, sociable, and spontaneous. Brings joy and energy to groups."
+  };
+
+  const mbtiData = {};  // { MBTI: [nume1, nume2...] }
+
+  mbtiTypes.forEach(type => mbtiData[type] = []);
+
+  function submitForm() {
+    const name = document.getElementById("name").value.trim();
+    const mbti = document.getElementById("mbti").value.trim().toUpperCase();
+    const msg = document.getElementById("response-msg");
+
+    if (!name || !mbtiTypes.includes(mbti)) {
+      msg.textContent = "Te rog să introduci un nume valid și un MBTI corect.";
+      return;
+    }
+
+    // Adaugă numele în lista MBTI
+    if (!mbtiData[mbti].includes(name)) {
+      mbtiData[mbti].push(name);
+    }
+
+    // Arată mesajul pentru utilizator
+    msg.textContent = messages[mbti];
+
+    // Actualizează secțiunea de afișare
+    renderDisplay();
+  }
+
+  function renderDisplay() {
+    const display = document.getElementById("display-section");
+    const container = document.getElementById("mbti-container");
+    container.innerHTML = "";
+
+    mbtiTypes.forEach(type => {
+      const box = document.createElement("div");
+      box.className = "mbti-box";
+      box.innerHTML = `
+        <div class="mbti-title">${type}</div>
+        <ul>${mbtiData[type].map(n => `<li>${n}</li>`).join("")}</ul>
+      `;
+      container.appendChild(box);
+    });
+
+    display.classList.remove("hidden");
+  }
+</script>
+
+</body>
+</html>
